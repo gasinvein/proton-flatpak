@@ -35,7 +35,7 @@ jobs:
     - name: Build flatpak
       run: |
         set -e
-        flatpak-builder --disable-updates --disable-download --sandbox build-dir ${FLATPAK_ID}.yml
+        flatpak-builder --disable-updates --disable-download --ccache --sandbox build-dir ${FLATPAK_ID}.yml
 
     - name: Upload build dir
       uses: actions/upload-artifact@v1

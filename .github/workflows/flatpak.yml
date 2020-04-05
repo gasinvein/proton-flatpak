@@ -42,34 +42,6 @@ jobs:
         set -e
         flatpak-builder --disable-updates --disable-download --ccache --sandbox ${FP_BUILD_DIR} ${FLATPAK_ID}.yml
 
-    - run: rm ${{ env.FP_BUILD_DIR }}/var/run
-
-    - name: Upload build dir
-      uses: actions/upload-artifact@v1
-      with:
-        name: ${{ env.FP_BUILD_NAME }}-dir-${{ github.run_id }}
-        path: ${{ env.FP_BUILD_DIR }}
-
-  bundle:
-    runs-on: ubuntu-latest
-
-    needs: build
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Install flatpak-builder
-      run: |
-        set -e
-        sudo add-apt-repository -y ppa:alexlarsson/flatpak
-        sudo apt update -y
-        sudo apt install -y flatpak-builder
-
-    - name: Download build dir
-      uses: actions/download-artifact@v1
-      with:
-        name: ${{ env.FP_BUILD_NAME }}-dir-${{ github.run_id }}
-
     - name: Create flatpak bundle
       run: |
         set -e

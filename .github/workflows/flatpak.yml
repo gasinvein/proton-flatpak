@@ -26,21 +26,16 @@ jobs:
         flatpak-builder --install-deps-from=flathub --install-deps-only --user /dev/null ${FLATPAK_ID}.yml
         flatpak-builder --download-only /dev/null ${FLATPAK_ID}.yml
 
-    - name: Download ccache
-      uses: actions/download-artifact@v1
+    - name: Prime ccache
+      uses: actions/cache@v1
       with:
-        name: flatpak-builder-ccache
+        path: .flatpak-builder/ccache
+        key: flatpak-builder-ccache
 
     - name: Build flatpak
       run: |
         set -e
         flatpak-builder --disable-updates --disable-download --sandbox build-dir ${FLATPAK_ID}.yml
-
-    - name: Upload ccache
-      uses: actions/upload-artifact@v1
-      with:
-        name: flatpak-builder-ccache
-        path: .flatpak-builder/ccache
 
     - name: Upload build dir
       uses: actions/upload-artifact@v1

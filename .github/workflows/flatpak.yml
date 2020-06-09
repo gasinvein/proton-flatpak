@@ -4,9 +4,8 @@ on: [push]
 
 env:
   FLATPAK_ID: com.valvesoftware.Steam.CompatibilityTool.Proton
-  FP_BUNDLE: Proton-${{ github.run_id }}.flatpak
+  FP_BUNDLE: proton-flatpak-oci-${{ github.run_id }}
   FP_BRANCH: stable
-  FP_BUILD_NAME: proton-flatpak
   FP_BUILD_DIR: build-dir
   FP_BUILD_REPO: build-repo
 
@@ -42,15 +41,19 @@ jobs:
         set -e
         flatpak-builder --disable-updates --disable-download --ccache --sandbox ${FP_BUILD_DIR} ${FLATPAK_ID}.yml
 
-    - name: Create flatpak bundle
+    - name: Create OCI bundle
       run: |
         set -e
         ostree --repo=${FP_BUILD_REPO} init --mode=bare-user
         flatpak-builder --export-only --repo=${FP_BUILD_REPO} ${FP_BUILD_DIR} ${FLATPAK_ID}.yml
-        flatpak build-bundle --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo --runtime ${FP_BUILD_REPO} ${FP_BUNDLE} ${FLATPAK_ID} ${FP_BRANCH}
+        flatpak build-bundle \
+          --oci \
+          --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo \
+          --runtime \
+          ${FP_BUILD_REPO} ${FP_BUNDLE} ${FLATPAK_ID} ${FP_BRANCH}
 
     - name: Upload bundle
       uses: actions/upload-artifact@v1
       with:
-        name: ${{ env.FP_BUILD_NAME }}-bundle-${{ github.run_id }}
+        name: ${{ env.FP_BUNDLE }}
         path: ${{ env.FP_BUNDLE }}

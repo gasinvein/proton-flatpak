@@ -25,6 +25,11 @@ jobs:
         sudo apt update -y
         sudo apt install -y flatpak-builder
 
+    - name: Dump canonical manifest
+      run: |
+        set -e
+        flatpak-builder --show-manifest ${FLATPAK_ID}.yml > canonical-manifest.json
+
     - name: Download flatpak SDK and sources
       run: |
         set -e
@@ -32,11 +37,14 @@ jobs:
         flatpak-builder --install-deps-from=flathub --install-deps-only --user /dev/null ${FLATPAK_ID}.yml
         flatpak-builder --download-only /dev/null ${FLATPAK_ID}.yml
 
-    - name: Prime ccache
+    - name: Prime cache
       uses: actions/cache@v2
       with:
-        path: .flatpak-builder/ccache
-        key: flatpak-builder-ccache
+        path: |
+          .flatpak-builder/ccache
+        key: flatpak-builder-${{ hashFiles('canonical-manifest.json') }}
+        restore-keys: |
+          flatpak-builder-
 
     - name: Build flatpak
       run: |

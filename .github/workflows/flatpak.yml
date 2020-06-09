@@ -31,7 +31,7 @@ jobs:
         flatpak-builder --download-only /dev/null ${FLATPAK_ID}.yml
 
     - name: Prime ccache
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: .flatpak-builder/ccache
         key: flatpak-builder-ccache

@@ -1,9 +1,11 @@
-name: Flatpak build
+name: Flatpak
 
 on: [push]
 
 env:
   FLATPAK_ID: com.valvesoftware.Steam.CompatibilityTool.Proton
+  IMAGE_NAME: proton
+  IMAGE_TAG: latest
   FP_BUNDLE: proton-flatpak-oci-${{ github.run_id }}
   FP_BRANCH: stable
   FP_BUILD_DIR: build-dir
@@ -57,3 +59,32 @@ jobs:
       with:
         name: ${{ env.FP_BUNDLE }}
         path: ${{ env.FP_BUNDLE }}
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install libcontainers tools
+      run: |
+        set -e
+        . /etc/os-release
+        sudo sh -c "echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
+        curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/Release.key | sudo apt-key add -
+        sudo apt update -y
+        sudo apt install -y skopeo
+    
+    - name: Download bundle
+      uses: actions/download-artifact@v1
+      with:
+        name: ${{ env.FP_BUNDLE }}
+
+    - name: Publish OCI image
+      run: |
+        set -e
+        skopeo copy \
+          --dest-creds ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} \
+          oci:${FP_BUNDLE} \
+          docker://docker.pkg.github.com/$GITHUB_REPOSITORY/$IMAGE_NAME:$IMAGE_TAG

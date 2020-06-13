@@ -1,8 +1,8 @@
 {
-    "Registry": "https://registry-1.docker.io",
+    "Registry": "https://registry-1.docker.io/",
     "Results": [
         {
-            "Name": "gasinvein/proton-flatpak:latest",
+            "Name": "gasinvein/proton-flatpak",
             "Images": [
                 {
                     "Name": "registry-1.docker.io/gasinvein/proton-flatpak",

@@ -6,34 +6,17 @@
             "Images": [
                 {
                     "Name": "registry-1.docker.io/gasinvein/proton-flatpak",
-                    "Digest": "sha256:730c5d8cd329a6017af7dcd1034c4dc65347be2bbc7a77a1986a9c4cb6442900",
+                    "Digest": "sha256:27ac55528d8d07a411b10f4d8386929e21a734fa0826e179f1a194ead0bf75ae",
                     "RepoTags": [
                         "latest"
                     ],
-                    "Created": "2020-07-16T16:32:20Z",
+                    "Created": "2020-08-17T19:09:56Z",
                     "DockerVersion": "",
-                    "Labels": {
-                        "org.flatpak.body": "Name: com.valvesoftware.Steam.CompatibilityTool.Proton\nArch: x86_64\nBranch: stable\nBuilt with: Flatpak 1.8.1\n",
-                        "org.flatpak.commit": "d24e597150a76398802bfb8f7bb3e987999c86d824c0ade6f5b3901a1a6ce475",
-                        "org.flatpak.commit-metadata.ostree.collection-binding": "AABz",
-                        "org.flatpak.commit-metadata.ostree.ref-binding": "cnVudGltZS9jb20udmFsdmVzb2Z0d2FyZS5TdGVhbS5Db21wYXRpYmlsaXR5VG9vbC5Qcm90b24veDg2XzY0L3N0YWJsZQBHAGFz",
-                        "org.flatpak.commit-metadata.xa.download-size": "AAAAADepBesAdA==",
-                        "org.flatpak.commit-metadata.xa.extra-data-sources": "bGlic3RlYW1fYXBpLnNvAAAAAAAABZNkAAAAAAAAAAAKQp1dboICW4O0oF/F1wpJl68mRZKHD+JUgpZOnh1ztmh0dHBzOi8vZ2l0aHViLmNvbS9WYWx2ZVNvZnR3YXJlL1Byb3Rvbi9yYXcvcHJvdG9uLTUuMC05L3N0ZWFtX2hlbHBlci9saWJzdGVhbV9hcGkuc28AQBCYAGEoYXl0dGF5cyk=",
-                        "org.flatpak.commit-metadata.xa.installed-size": "AAAAADfGwAAAdA==",
-                        "org.flatpak.commit-metadata.xa.metadata": "W1J1bnRpbWVdCm5hbWU9Y29tLnZhbHZlc29mdHdhcmUuU3RlYW0uQ29tcGF0aWJpbGl0eVRvb2wuUHJvdG9uCnNkaz1vcmcuZnJlZWRlc2t0b3AuU2RrL3g4Nl82NC8xOS4wOAoKW0V4dGVuc2lvbk9mXQpyZWY9YXBwL2NvbS52YWx2ZXNvZnR3YXJlLlN0ZWFtL3g4Nl82NC9zdGFibGUKcnVudGltZT1vcmcuZnJlZWRlc2t0b3AuUGxhdGZvcm0veDg2XzY0LzE5LjA4CgpbRXh0cmEgRGF0YV0KbmFtZT1saWJzdGVhbV9hcGkuc28KY2hlY2tzdW09MGE0MjlkNWQ2ZTgyMDI1YjgzYjRhMDVmYzVkNzBhNDk5N2FmMjY0NTkyODcwZmUyNTQ4Mjk2NGU5ZTFkNzNiNgpzaXplPTM2NTQxMgp1cmk9aHR0cHM6Ly9naXRodWIuY29tL1ZhbHZlU29mdHdhcmUvUHJvdG9uL3Jhdy9wcm90b24tNS4wLTkvc3RlYW1faGVscGVyL2xpYnN0ZWFtX2FwaS5zbwoAAHM=",
-                        "org.flatpak.commit-metadata.xa.ref": "cnVudGltZS9jb20udmFsdmVzb2Z0d2FyZS5TdGVhbS5Db21wYXRpYmlsaXR5VG9vbC5Qcm90b24veDg2XzY0L3N0YWJsZQAAcw==",
-                        "org.flatpak.download-size": "317015799",
-                        "org.flatpak.installed-size": "935772160",
-                        "org.flatpak.metadata": "[Runtime]\nname=com.valvesoftware.Steam.CompatibilityTool.Proton\nsdk=org.freedesktop.Sdk/x86_64/19.08\n\n[ExtensionOf]\nref=app/com.valvesoftware.Steam/x86_64/stable\nruntime=org.freedesktop.Platform/x86_64/19.08\n\n[Extra Data]\nname=libsteam_api.so\nchecksum=0a429d5d6e82025b83b4a05fc5d70a4997af264592870fe25482964e9e1d73b6\nsize=365412\nuri=https://github.com/ValveSoftware/Proton/raw/proton-5.0-9/steam_helper/libsteam_api.so\n",
-                        "org.flatpak.ref": "runtime/com.valvesoftware.Steam.CompatibilityTool.Proton/x86_64/stable",
-                        "org.flatpak.subject": "Export com.valvesoftware.Steam.CompatibilityTool.Proton",
-                        "org.flatpak.timestamp": "1594917140",
-                        "org.freedesktop.appstream.appdata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<components version=\"0.8\" origin=\"flatpak\">\n  <component type=\"addon\">\n    <id>com.valvesoftware.Steam.CompatibilityTool.Proton</id>\n    <name>Proton</name>\n    <summary>Compatibility tool for Steam Play based on Wine and additional components</summary>\n    <project_license>BSD-3-Clause and LGPL-2.1 and zlib-acknowledgement and Zlib and OFL-1.1 and MIT and MPL-2.0 and LicenseRef-proprietary</project_license>\n    <url type=\"bugtracker\">https://github.com/flathub/com.valvesoftware.Steam.CompatibilityTool.Proton/issues</url>\n    <url type=\"homepage\">https://github.com/ValveSoftware/Proton</url>\n    <extends>com.valvesoftware.Steam</extends>\n    <bundle type=\"flatpak\" sdk=\"org.freedesktop.Sdk/x86_64/19.08\">runtime/com.valvesoftware.Steam.CompatibilityTool.Proton/x86_64/stable</bundle>\n  </component>\n</components>"
-                    },
+                    "Labels": null,
                     "Architecture": "amd64",
                     "Os": "linux",
                     "Layers": [
-                        "sha256:086f43b0d9cc56a6eaa88819020811a950e15a242646f4e8e8e3f3a2b007d0a4"
+                        "sha256:a9b3240675ecc254717f53593da2d89ae352349f419cbf8a88e687efb1051d85"
                     ],
                     "Env": null
                 }

@@ -1,10 +1,46 @@
-id: com.valvesoftware.Steam.CompatibilityTool.Proton
+id: com.valvesoftware.Proton
 default-branch: stable
-runtime: com.valvesoftware.Steam
-runtime-version: stable
-sdk: org.freedesktop.Sdk//19.08
-build-extension: true
-appstream-compose: false
+runtime: org.freedesktop.Platform
+runtime-version: "19.08"
+sdk: org.freedesktop.Sdk
+
+finish-args:
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --device=all
+  - --socket=pulseaudio
+  - --share=network
+  - --allow=multiarch
+  - --allow=devel
+  - --system-talk-name=org.freedesktop.UDisks2
+  - --system-talk-name=org.freedesktop.NetworkManager
+  - --env=STEAM_COMPAT_DATA_PATH=/var/data/proton
+  - --env=WINEPREFIX=/var/data/proton/pfx
+
+add-extensions:
+  org.freedesktop.Platform.Compat.i386:
+    directory: lib/i386-linux-gnu
+    version: '19.08'
+
+  org.freedesktop.Platform.Compat.i386.Debug:
+    directory: lib/debug/lib/i386-linux-gnu
+    version: '19.08'
+    no-autodownload: true
+
+  org.freedesktop.Platform.GL32:
+    directory: lib/i386-linux-gnu/GL
+    version: '1.4'
+    versions: 19.08;1.4
+    subdirectories: true
+    no-autodownload: true
+    autodelete: false
+    add-ld-path: lib
+    merge-dirs: vulkan/icd.d;glvnd/egl_vendor.d;OpenCL/vendors;lib/dri;lib/d3d;vulkan/explicit_layer.d
+    download-if: active-gl-driver
+    enable-if: active-gl-driver
+
+command: /app/proton
 
 sdk-extensions:
   - org.freedesktop.Sdk.Compat.i386
@@ -12,24 +48,19 @@ sdk-extensions:
   - org.freedesktop.Sdk.Extension.mingw-w64
 
 build-options:
-  prefix: /app/share/steam/compatibilitytools.d/Proton
-  append-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton/bin
-  strip: true
-  env:
-    C_INCLUDE_PATH: /app/share/steam/compatibilitytools.d/Proton/include:/app/include
-    CPLUS_INCLUDE_PATH: /app/share/steam/compatibilitytools.d/Proton/include:/app/include
+  append-path: /usr/lib/sdk/mingw-w64/bin
   cflags: &optflags -march=nocona -mtune=core-avx2 -mfpmath=sse
   cxxflags: *optflags
 
 x-compat-i386-opts: &compat_i386_opts
+  prepend-path: /app/bin32
   prepend-pkg-config-path: /app/lib32/pkgconfig:/usr/lib/i386-linux-gnu/pkgconfig
   ldflags: -L/app/lib32
-  prepend-path: /app/share/steam/compatibilitytools.d/Proton/bin32
   append-path: /usr/lib/sdk/toolchain-i386/bin
   env:
     CC: ccache i686-unknown-linux-gnu-gcc
     CXX: ccache i686-unknown-linux-gnu-g++
-  libdir: /app/share/steam/compatibilitytools.d/Proton/lib32
+  libdir: /app/lib32
 
 x-proton-source: &proton_source
   type: git
@@ -133,15 +164,12 @@ modules:
   - name: wine
     subdir: wine
     build-options:
-      prepend-pkg-config-path: /app/share/steam/compatibilitytools.d/Proton/lib/pkgconfig
-      env:
-        LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton/lib
       arch:
         x86_64:
           config-opts:
             - --enable-win64
             - --with-mingw=ccache x86_64-w64-mingw32-gcc
-          libdir: /app/share/steam/compatibilitytools.d/Proton/lib
+          libdir: /app/lib
     config-opts: &wine_common_opts
       - --disable-win16
       - --disable-tests
@@ -162,13 +190,10 @@ modules:
     only-arches:
       - x86_64
     build-options:
-      prepend-pkg-config-path: /app/share/steam/compatibilitytools.d/Proton/lib32/pkgconfig
-      env:
-        LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton/lib32
       arch:
         x86_64: *compat_i386_opts
       config-opts:
-        - --bindir=/app/share/steam/compatibilitytools.d/Proton/bin32
+        - --bindir=/app/bin32
         - --with-mingw=ccache i686-w64-mingw32-gcc
     config-opts: *wine_common_opts
     make-install-args: *wine_common_make_install_args
@@ -433,7 +458,7 @@ modules:
   - name: default-prefix
     build-options:
       env:
-        WINEPREFIX: /app/share/steam/compatibilitytools.d/Proton/share/default_pfx
+        WINEPREFIX: /app/share/default_pfx
         LC_ALL: C
     buildsystem: simple
     build-commands:
@@ -470,7 +495,6 @@ modules:
         ln -s ../share dist/share
         ln -s ../version dist/version
       - install -Dm644 -t ${FLATPAK_DEST}/share/metainfo ${FLATPAK_ID}.metainfo.xml
-      - appstream-compose --basename=${FLATPAK_ID} --prefix=${FLATPAK_DEST} --origin=flatpak ${FLATPAK_ID}
     sources:
       - *proton_source
       - type: patch
@@ -478,4 +502,16 @@ modules:
       - type: file
         path: compatibilitytool.vdf
       - type: file
-        path: com.valvesoftware.Steam.CompatibilityTool.Proton.metainfo.xml
+        path: com.valvesoftware.Proton.metainfo.xml
+
+
+  - name: metadata
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 -t ${FLATPAK_DEST}/etc ld.so.conf
+      - mkdir -p ${FLATPAK_DEST}/lib/i386-linux-gnu
+      - mkdir -p ${FLATPAK_DEST}/lib/debug/lib/i386-linux-gnu
+      - mkdir -p ${FLATPAK_DEST}/lib/i386-linux-gnu/GL
+    sources:
+      - type: file
+        path: ld.so.conf

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component type="addon">
-  <id>com.valvesoftware.Steam.CompatibilityTool.Proton</id>
-  <extends>com.valvesoftware.Steam</extends>
+<component type="console-application">
+  <id>com.valvesoftware.Proton</id>
   <name>Proton</name>
   <summary>Compatibility tool for Steam Play based on Wine and additional components</summary>
   <url type="homepage">https://github.com/ValveSoftware/Proton</url>

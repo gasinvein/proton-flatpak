@@ -6,17 +6,17 @@
             "Images": [
                 {
                     "Name": "registry-1.docker.io/gasinvein/proton-flatpak",
-                    "Digest": "sha256:18c23a4bb7db8f28c8647a1a205252cbc22c20eae42efe665b474d9d6d90b7b7",
+                    "Digest": "sha256:4ad65fd2af91f875a4ea28540c0ebf0884d235d94b3e2480e7f71deccace3ad1",
                     "RepoTags": [
                         "latest"
                     ],
-                    "Created": "2020-08-18T11:26:54Z",
+                    "Created": "2020-08-18T12:44:26Z",
                     "DockerVersion": "",
                     "Labels": null,
                     "Architecture": "amd64",
                     "Os": "linux",
                     "Layers": [
-                        "sha256:c9aeadd2e427a7da2b60d4572275239537743b5e11dbfe9292446b5107449b5d"
+                        "sha256:a793ccbf859e3492852b04d1bc64482d41711cbb2c6401e21f70fe74970e0149"
                     ],
                     "Env": null
                 }

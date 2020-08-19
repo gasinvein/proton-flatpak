@@ -502,9 +502,6 @@ modules:
         ln -s ../share dist/share
         ln -s ../version dist/version
       - install -Dm644 -t ${FLATPAK_DEST}/share/metainfo ${FLATPAK_ID}.metainfo.xml
-      - mkdir -p /app/utils /app/share/vulkan
-      - ln -srv /app/{utils/,}share/vulkan/explicit_layer.d
-      - ln -srv /app/{utils/,}share/vulkan/implicit_layer.d
     sources:
       - *proton_source
       - type: patch
@@ -522,6 +519,9 @@ modules:
       - mkdir -p ${FLATPAK_DEST}/lib/i386-linux-gnu
       - mkdir -p ${FLATPAK_DEST}/lib/debug/lib/i386-linux-gnu
       - mkdir -p ${FLATPAK_DEST}/lib/i386-linux-gnu/GL
+      - mkdir -p /app/utils /app/share/vulkan
+      - ln -srv /app/{utils/,}share/vulkan/explicit_layer.d
+      - ln -srv /app/{utils/,}share/vulkan/implicit_layer.d
     sources:
       - type: file
         path: ld.so.conf

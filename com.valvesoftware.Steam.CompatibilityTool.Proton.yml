@@ -40,6 +40,13 @@ add-extensions:
     download-if: active-gl-driver
     enable-if: active-gl-driver
 
+  com.valvesoftware.Steam.Utility:
+    subdirectories: true
+    directory: utils
+    merge-dirs: share/vulkan/explicit_layer.d;share/vulkan/implicit_layer.d;
+    no-autodownload: true
+    autodelete: true
+
 command: /app/proton
 
 sdk-extensions:
@@ -495,6 +502,9 @@ modules:
         ln -s ../share dist/share
         ln -s ../version dist/version
       - install -Dm644 -t ${FLATPAK_DEST}/share/metainfo ${FLATPAK_ID}.metainfo.xml
+      - mkdir -p /app/utils /app/share/vulkan
+      - ln -srv /app/{utils/,}share/vulkan/explicit_layer.d
+      - ln -srv /app/{utils/,}share/vulkan/implicit_layer.d
     sources:
       - *proton_source
       - type: patch

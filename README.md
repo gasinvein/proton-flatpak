@@ -1,3 +1,7 @@
+[Moved to Flathub](https://github.com/flathub/com.valvesoftware.Steam.CompatibilityTool.Proton). This repository is obsolete.
+
+---
+
 # Proton flatpak
 
 Proton is the Valve's compatibility layer for running Windows games on Linux through Steam.

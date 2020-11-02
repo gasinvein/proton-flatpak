@@ -1,3 +1,7 @@
+[Moved to Flathub](https://github.com/flathub/com.valvesoftware.Steam.CompatibilityTool.Proton-GE). This repository is obsolete.
+
+---
+
 # Proton flatpak
 
 Proton-GE is a custom Proton fork with the most recent releases of vanilla WINE.

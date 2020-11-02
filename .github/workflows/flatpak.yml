@@ -102,6 +102,15 @@ jobs:
                           --repo=${FP_BUILD_REPO} ${FP_BUILD_DIR} \
                           ${FLATPAK_ID}.yml
 
+      - name: Mark as EOL
+        run: |
+          set -e
+          flatpak build-commit-from -v \
+            --end-of-life='Migrated to Flathub' \
+            ${FP_BUILD_REPO} \
+            --src-ref=runtime/${FLATPAK_ID}/x86_64/${FP_BRANCH} \
+                      runtime/${FLATPAK_ID}/x86_64/${FP_BRANCH}
+
       - name: Upload flatpak repo
         uses: actions/upload-artifact@v2
         with:

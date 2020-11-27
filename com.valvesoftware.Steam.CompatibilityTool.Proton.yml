@@ -405,6 +405,10 @@ modules:
       - cd ${FLATPAK_BUILDER_BUILDDIR}; git submodule status -- vkd3d-proton > ${FLATPAK_DEST}/lib/wine/vkd3d-proton/version
     sources: &vkd3d-proton-sources
       - *proton_source
+      - type: patch
+        dest: vkd3d-proton
+        paths:
+          - patches/vkd3d-proton/build-number-no-git.patch
       - type: file
         dest: vkd3d-proton
         path: meson-ccache-mingw32.txt

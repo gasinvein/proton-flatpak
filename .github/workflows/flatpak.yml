@@ -1,0 +1,190 @@
+name: Flatpak
+
+on: push
+
+env:
+  FLATPAK_ID: com.valvesoftware.Steam.CompatibilityTool.Proton-GE
+  IMAGE_NAME: proton-ge
+  IMAGE_TAG: latest
+  DOCKERHUB_USER: ${{ github.repository_owner }}
+  DOCKERHUB_REPO: ${{ github.repository_owner }}/proton-ge-flatpak
+  FP_BUNDLE: proton-ge-flatpak-${{ github.run_id }}
+  FP_BRANCH: stable
+  FP_BUILD_DIR: build-dir
+  FP_BUILD_REPO: build-repo
+  UPSTREAM_REPO_NAME: proton-ge-custom
+  UPSTREAM_REPO_URL: https://github.com/GloriousEggroll/proton-ge-custom.git
+  UPSTREAM_TAG: "5.21-GE-1"
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install dependencies
+        run: |
+          set -e
+          sudo sed -i '/deb-src/s/^# //' /etc/apt/sources.list
+          sudo apt-get update
+          sudo apt-get install -y git tar build-essential
+          sudo apt-get build-dep -y wine
+
+      - name: Clone upstream repo
+        run: git clone --recursive -b "${UPSTREAM_TAG}" "${UPSTREAM_REPO_URL}" "${UPSTREAM_REPO_NAME}"
+
+      - name: Apply patches
+        run: |
+          set -e
+          cd "${UPSTREAM_REPO_NAME}"
+          bash -xe ./patches/protonprep-nofshack.sh
+
+      - name: Pack tarball
+        env:
+          TARBALL_NAME: ${{ env.UPSTREAM_REPO_NAME }}-${{ env.UPSTREAM_TAG }}
+        run: |
+          set -e
+          cd "${UPSTREAM_REPO_NAME}"
+          tar -z --exclude-vcs --transform="s|^.|"${TARBALL_NAME}"|" -cf ../${TARBALL_NAME}.tar .
+
+      - name: Upload tarball
+        uses: actions/upload-artifact@v2
+        env:
+          TARBALL_NAME: ${{ env.UPSTREAM_REPO_NAME }}-${{ env.UPSTREAM_TAG }}
+        with:
+          name: upstream-tarball-${{ github.run_id }}
+          path: ${{ env.TARBALL_NAME }}.tar
+
+  build:
+    runs-on: ubuntu-latest
+    needs: pack
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download tarball
+        uses: actions/download-artifact@v2
+        with:
+          name: upstream-tarball-${{ github.run_id }}
+
+      - name: Install flatpak-builder
+        run: |
+          set -e
+          sudo add-apt-repository -y ppa:alexlarsson/flatpak
+          sudo apt update -y
+          sudo apt install -y flatpak-builder
+
+      - name: Dump canonical manifest
+        run: |
+          set -e
+          flatpak-builder --show-manifest ${FLATPAK_ID}.yml > canonical-manifest.json
+
+      - name: Download flatpak SDK and sources
+        run: |
+          set -e
+          flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          flatpak-builder --install-deps-from=flathub --install-deps-only --user /dev/null ${FLATPAK_ID}.yml
+          flatpak-builder --download-only /dev/null ${FLATPAK_ID}.yml
+
+      - name: Prime cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            .flatpak-builder/ccache
+          key: flatpak-builder-${{ hashFiles('canonical-manifest.json') }}
+          restore-keys: |
+            flatpak-builder-
+
+      - name: Build flatpak
+        run: |
+          set -e
+          flatpak-builder --disable-updates --disable-download --ccache --sandbox --repo=${FP_BUILD_REPO} ${FP_BUILD_DIR} ${FLATPAK_ID}.yml
+
+      - name: Upload flatpak repo
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ env.FP_BUILD_REPO }}
+          path: ${{ env.FP_BUILD_REPO }}
+
+  publish-bundle:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install flatpak
+        run: |
+          set -e
+          sudo add-apt-repository -y ppa:alexlarsson/flatpak
+          sudo apt update -y
+          sudo apt install -y flatpak
+
+      - name: Download flatpak repo
+        uses: actions/download-artifact@v1
+        with:
+          name: ${{ env.FP_BUILD_REPO }}
+      
+      - name: Create flatpak bundle
+        run: |
+          set -e
+          flatpak build-bundle --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo --runtime ${FP_BUILD_REPO} ${FP_BUNDLE}.flatpak ${FLATPAK_ID} ${FP_BRANCH}
+
+      - name: Upload flatpak bundle
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ env.FP_BUNDLE }}
+          path: ${{ env.FP_BUNDLE }}.flatpak
+
+  publish-oci:
+    if: github.ref == 'refs/heads/ge'
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install flatpak and libcontainers tools
+        run: |
+          set -e
+          . /etc/os-release
+          sudo sh -c "echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
+          curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/Release.key | sudo apt-key add -
+          sudo add-apt-repository -y ppa:alexlarsson/flatpak
+          sudo apt update -y
+          sudo apt install -y skopeo flatpak jq
+      
+      - name: Download flatpak repo
+        uses: actions/download-artifact@v1
+        with:
+          name: ${{ env.FP_BUILD_REPO }}
+
+      - name: Create OCI bundle
+        run: |
+          set -e
+          flatpak build-bundle \
+            --oci \
+            --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo \
+            --runtime \
+            ${FP_BUILD_REPO} ${FP_BUNDLE} ${FLATPAK_ID} ${FP_BRANCH}
+
+      - name: Publish OCI image
+        run: |
+          set -e
+          skopeo copy \
+            --dest-creds ${DOCKERHUB_USER}:${{ secrets.DOCKERHUB_TOKEN }} \
+            oci:${FP_BUNDLE} \
+            docker://docker.io/$DOCKERHUB_REPO:$IMAGE_TAG
+
+      - name: Update static index
+        run: |
+          set -e
+          git clone -b gh-pages https://${GITHUB_ACTOR}:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git gh-pages
+          skopeo inspect docker://docker.io/$DOCKERHUB_REPO:$IMAGE_TAG | \
+            jq '. as $img | { "Registry": "https://registry-1.docker.io/", "Results": [ { "Name": "'$DOCKERHUB_REPO'", "Images": [$img] } ] }' \
+            > gh-pages/index/static
+          cd gh-pages
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git config user.name "Workflow trigger"
+          git add index/static
+          git commit -m "Update index for ${GITHUB_SHA:0:7}"
+          git push

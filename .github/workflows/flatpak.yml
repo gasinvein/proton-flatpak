@@ -9,7 +9,7 @@ env:
   DOCKERHUB_USER: ${{ github.repository_owner }}
   DOCKERHUB_REPO: ${{ github.repository_owner }}/proton-ge-flatpak
   FP_BUNDLE: proton-ge-flatpak-${{ github.run_id }}
-  FP_BRANCH: stable
+  FP_BRANCH: test
   FP_BUILD_DIR: build-dir
   FP_BUILD_REPO: build-repo
   UPSTREAM_REPO_NAME: proton-ge-custom
@@ -97,7 +97,10 @@ jobs:
       - name: Build flatpak
         run: |
           set -e
-          flatpak-builder --disable-updates --disable-download --ccache --sandbox --repo=${FP_BUILD_REPO} ${FP_BUILD_DIR} ${FLATPAK_ID}.yml
+          flatpak-builder --disable-updates --disable-download --ccache --sandbox \
+                          --default-branch=${FP_BRANCH} \
+                          --repo=${FP_BUILD_REPO} ${FP_BUILD_DIR} \
+                          ${FLATPAK_ID}.yml
 
       - name: Upload flatpak repo
         uses: actions/upload-artifact@v1

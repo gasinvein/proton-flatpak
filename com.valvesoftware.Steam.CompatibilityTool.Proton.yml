@@ -71,7 +71,7 @@ modules:
     builddir: true
     config-opts: &FAudio-config-opts
       - -DGSTREAMER=ON
-    sources:
+    sources: &FAudio-sources
       - *proton_source
 
   - name: FAudio-32bit
@@ -84,8 +84,7 @@ modules:
     buildsystem: cmake-ninja
     builddir: true
     config-opts: *FAudio-config-opts
-    sources:
-      - *proton_source
+    sources: *FAudio-sources
 
 
   - name: jxrlib
@@ -99,7 +98,7 @@ modules:
       - -DCMAKE_INSTALL_RPATH=$ORIGIN
     cleanup:
       - /bin
-    sources:
+    sources: &jxrlib-sources
       - *proton_source
 
   - name: jxrlib-32bit
@@ -116,8 +115,7 @@ modules:
     config-opts: *jxrlib-config-opts
     cleanup:
       - /bin
-    sources:
-      - *proton_source
+    sources: *jxrlib-sources
 
 
   - name: wine

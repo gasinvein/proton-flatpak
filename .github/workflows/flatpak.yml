@@ -131,6 +131,7 @@ jobs:
       - name: Create flatpak bundle
         run: |
           set -e
+          mkdir -p ${FP_BUILD_REPO}/{extensions,refs/{mirrors,remotes},state,tmp/cache}
           flatpak build-bundle --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo --runtime ${FP_BUILD_REPO} ${FP_BUNDLE}.flatpak ${FLATPAK_ID} ${FP_BRANCH}
 
       - name: Upload flatpak bundle
@@ -166,6 +167,7 @@ jobs:
       - name: Create OCI bundle
         run: |
           set -e
+          mkdir -p ${FP_BUILD_REPO}/{extensions,refs/{mirrors,remotes},state,tmp/cache}
           flatpak build-bundle \
             --oci \
             --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo \

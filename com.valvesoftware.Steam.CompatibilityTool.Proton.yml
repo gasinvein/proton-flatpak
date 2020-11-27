@@ -1,4 +1,4 @@
-id: com.valvesoftware.Steam.CompatibilityTool.Proton
+id: com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 default-branch: stable
 runtime: com.valvesoftware.Steam
 runtime-version: stable
@@ -13,12 +13,12 @@ sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
 
 build-options:
-  prefix: /app/share/steam/compatibilitytools.d/Proton
-  append-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton/bin
-  ldflags: -L/app/share/steam/compatibilitytools.d/Proton/lib
+  prefix: /app/share/steam/compatibilitytools.d/Proton-GE
+  append-path: /usr/lib/sdk/mingw-w64/bin:/app/share/steam/compatibilitytools.d/Proton-GE/bin
+  ldflags: -L/app/share/steam/compatibilitytools.d/Proton-GE/lib
   env:
-    C_INCLUDE_PATH: /app/share/steam/compatibilitytools.d/Proton/include:/app/include
-    CPLUS_INCLUDE_PATH: /app/share/steam/compatibilitytools.d/Proton/include:/app/include
+    C_INCLUDE_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/include:/app/include
+    CPLUS_INCLUDE_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/include:/app/include
   cflags: &optflags -O2 -pipe -march=nocona -mtune=core-avx2 -mfpmath=sse -fwrapv -fno-strict-aliasing
   cflags-override: true
   cxxflags: *optflags
@@ -26,19 +26,18 @@ build-options:
 
 x-compat-i386-opts: &compat_i386_opts
   prepend-pkg-config-path: /app/lib32/pkgconfig:/usr/lib/i386-linux-gnu/pkgconfig
-  ldflags: -L/app/share/steam/compatibilitytools.d/Proton/lib32 -L/app/lib32
-  prepend-path: /app/share/steam/compatibilitytools.d/Proton/bin32
+  ldflags: -L/app/share/steam/compatibilitytools.d/Proton-GE/lib32 -L/app/lib32
+  prepend-path: /app/share/steam/compatibilitytools.d/Proton-GE/bin32
   append-path: /usr/lib/sdk/toolchain-i386/bin
   env:
     CC: ccache i686-unknown-linux-gnu-gcc
     CXX: ccache i686-unknown-linux-gnu-g++
-  libdir: /app/share/steam/compatibilitytools.d/Proton/lib32
+  libdir: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
 
 x-proton-source: &proton_source
-  type: git
-  url: "https://github.com/ValveSoftware/Proton.git"
-  tag: proton-5.13-2
-  commit: 4e84cd392d8b6c4bae0b21ef4ad5b6c86f13cb3b
+  type: archive
+  archive-type: tar
+  path: proton-ge-custom-5.21-GE-1.tar
 
 cleanup:
   - "*.a"
@@ -121,15 +120,15 @@ modules:
   - name: wine
     subdir: wine
     build-options:
-      prepend-pkg-config-path: /app/share/steam/compatibilitytools.d/Proton/lib/pkgconfig
+      prepend-pkg-config-path: /app/share/steam/compatibilitytools.d/Proton-GE/lib/pkgconfig
       env:
-        LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton/lib
+        LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib
       arch:
         x86_64:
           config-opts:
             - --enable-win64
             - --with-mingw=ccache x86_64-w64-mingw32-gcc
-          libdir: /app/share/steam/compatibilitytools.d/Proton/lib
+          libdir: /app/share/steam/compatibilitytools.d/Proton-GE/lib
     config-opts: &wine_common_opts
       - --disable-win16
       - --disable-tests
@@ -141,30 +140,26 @@ modules:
       #FIXME remove once vkd3d is removed from Steam bundle
       - --without-vkd3d
       - --with-jxrlib
-      - JXRLIB_CFLAGS=-I/app/share/steam/compatibilitytools.d/Proton/include/jxrlib
+      - JXRLIB_CFLAGS=-I/app/share/steam/compatibilitytools.d/Proton-GE/include/jxrlib
     make-install-args: &wine_common_make_install_args
       - LDCONFIG=/bin/true
       - UPDATE_DESKTOP_DATABASE=/bin/true
       - INSTALL_PROGRAM_FLAGS=-s
     sources: &wine_sources
       - *proton_source
-      - type: patch
-        dest: wine
-        paths:
-          - patches/wine/seccomp-external-filter.patch
 
   - name: wine-32bit
     subdir: wine
     only-arches:
       - x86_64
     build-options:
-      prepend-pkg-config-path: /app/share/steam/compatibilitytools.d/Proton/lib32/pkgconfig
+      prepend-pkg-config-path: /app/share/steam/compatibilitytools.d/Proton-GE/lib32/pkgconfig
       env:
-        LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton/lib32
+        LD_RUN_PATH: /app/share/steam/compatibilitytools.d/Proton-GE/lib32
       arch:
         x86_64: *compat_i386_opts
       config-opts:
-        - --bindir=/app/share/steam/compatibilitytools.d/Proton/bin32
+        - --bindir=/app/share/steam/compatibilitytools.d/Proton-GE/bin32
         - --with-mingw=ccache i686-w64-mingw32-gcc
     config-opts: *wine_common_opts
     make-install-args: *wine_common_make_install_args
@@ -400,7 +395,9 @@ modules:
       - --strip
       - -Denable_standalone_d3d12=true
     post-install:
-      - cd ${FLATPAK_BUILDER_BUILDDIR}; git submodule status -- vkd3d-proton > ${FLATPAK_DEST}/lib/wine/vkd3d-proton/version
+      - |
+        cd ${FLATPAK_DEST}/lib/wine/vkd3d-proton
+        sha1sum d3d12.dll > version
     sources: &vkd3d-proton-sources
       - *proton_source
       - type: patch
@@ -425,7 +422,7 @@ modules:
         - --bindir=lib32/wine/vkd3d-proton
     config-opts: *vkd3d-proton-config-opts
     post-install:
-      - cd ${FLATPAK_BUILDER_BUILDDIR}; git submodule status -- vkd3d-proton > ${FLATPAK_DEST}/lib32/wine/vkd3d-proton/version
+      - ln -sr ${FLATPAK_DEST}/lib{,32}/wine/vkd3d-proton/version
     sources: *vkd3d-proton-sources
 
 
@@ -447,8 +444,9 @@ modules:
       - -Denable_d3d10=true
       - -Denable_d3d11=true
     post-install:
-      - cd ${FLATPAK_BUILDER_BUILDDIR}; git submodule status -- dxvk > ${FLATPAK_DEST}/lib/wine/dxvk/version
-      - ln -s version ${FLATPAK_DEST}/lib/wine/dxvk/d9vk_version
+      - |
+        cd ${FLATPAK_DEST}/lib/wine/dxvk
+        sha1sum d3d11.dll > version
     sources: &dxvk_sources
       - *proton_source
       - type: file
@@ -469,8 +467,7 @@ modules:
         - --bindir=lib32/wine/dxvk
     config-opts: *dxvk_config_opts
     post-install:
-      - cd ${FLATPAK_BUILDER_BUILDDIR}; git submodule status -- dxvk > ${FLATPAK_DEST}/lib32/wine/dxvk/version
-      - ln -s version ${FLATPAK_DEST}/lib32/wine/dxvk/d9vk_version
+      - ln -sr ${FLATPAK_DEST}/lib{,32}/wine/dxvk/version
     sources: *dxvk_sources
 
 
@@ -505,7 +502,7 @@ modules:
   - name: default-prefix
     build-options:
       env:
-        WINEPREFIX: /app/share/steam/compatibilitytools.d/Proton/share/default_pfx
+        WINEPREFIX: /app/share/steam/compatibilitytools.d/Proton-GE/share/default_pfx
         LC_ALL: C
     buildsystem: simple
     build-commands:
@@ -514,6 +511,9 @@ modules:
 
 
   - name: proton
+    build-options:
+      env:
+        PROTON_VERSION: 5.21-GE-1
     buildsystem: simple
     build-commands:
       - install -Dm755 -t ${FLATPAK_DEST}/
@@ -526,7 +526,6 @@ modules:
       - install -Dm644 toolmanifest_noruntime.vdf ${FLATPAK_DEST}/toolmanifest.vdf
       - install -Dm644 dist.LICENSE ${FLATPAK_DEST}/LICENSE
       - |
-        PROTON_VERSION=$(git describe --tags | sed 's/^proton-//')
         TIMESTAMP=$(date +%s)
         echo ${TIMESTAMP} proton_flatpak-${PROTON_VERSION} > ${FLATPAK_DEST}/version
         sed \
@@ -552,4 +551,4 @@ modules:
       - type: file
         path: compatibilitytool.vdf
       - type: file
-        path: com.valvesoftware.Steam.CompatibilityTool.Proton.metainfo.xml
+        path: com.valvesoftware.Steam.CompatibilityTool.Proton-GE.metainfo.xml

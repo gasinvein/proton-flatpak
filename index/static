@@ -6,33 +6,33 @@
       "Images": [
         {
           "Name": "docker.io/gasinvein/proton-ge-flatpak",
-          "Digest": "sha256:b50a3da31228315735508b74fb4b05e761e68ba907c65ef467c2975f9237d2cd",
+          "Digest": "sha256:918143a0bd02b64826f5b8adfbf9e332af6e10cdad9fed6752a58a4db7303adf",
           "RepoTags": [
             "latest"
           ],
-          "Created": "2020-11-27T14:06:00Z",
+          "Created": "2020-11-27T18:16:36Z",
           "DockerVersion": "",
           "Labels": {
-            "org.flatpak.body": "Name: com.valvesoftware.Steam.CompatibilityTool.Proton-GE\nArch: x86_64\nBranch: stable\nBuilt with: Flatpak 1.9.2\n",
-            "org.flatpak.commit": "fcbd043c00fcb77be4cc9be3744ddde1e5d6778dce7c4ad6df2d989ea3170d27",
+            "org.flatpak.body": "Name: com.valvesoftware.Steam.CompatibilityTool.Proton-GE\nArch: x86_64\nBranch: test\nBuilt with: Flatpak 1.9.2\n",
+            "org.flatpak.commit": "c9c689070a4fc599a2a8700a4693a40e47e64fa562ed6a779bcca2ae833c452d",
             "org.flatpak.commit-metadata.ostree.collection-binding": "AABz",
-            "org.flatpak.commit-metadata.ostree.ref-binding": "cnVudGltZS9jb20udmFsdmVzb2Z0d2FyZS5TdGVhbS5Db21wYXRpYmlsaXR5VG9vbC5Qcm90b24tR0UveDg2XzY0L3N0YWJsZQBKAGFz",
-            "org.flatpak.commit-metadata.xa.download-size": "AAAAABb8C+MAdA==",
+            "org.flatpak.commit-metadata.ostree.ref-binding": "cnVudGltZS9jb20udmFsdmVzb2Z0d2FyZS5TdGVhbS5Db21wYXRpYmlsaXR5VG9vbC5Qcm90b24tR0UveDg2XzY0L3Rlc3QASABhcw==",
+            "org.flatpak.commit-metadata.xa.download-size": "AAAAABb8FG8AdA==",
             "org.flatpak.commit-metadata.xa.installed-size": "AAAAAEPh1gAAdA==",
             "org.flatpak.commit-metadata.xa.metadata": "W1J1bnRpbWVdCm5hbWU9Y29tLnZhbHZlc29mdHdhcmUuU3RlYW0uQ29tcGF0aWJpbGl0eVRvb2wuUHJvdG9uLUdFCnNkaz1vcmcuZnJlZWRlc2t0b3AuU2RrL3g4Nl82NC8yMC4wOAoKW0V4dGVuc2lvbk9mXQpyZWY9YXBwL2NvbS52YWx2ZXNvZnR3YXJlLlN0ZWFtL3g4Nl82NC9zdGFibGUKcnVudGltZT1vcmcuZnJlZWRlc2t0b3AuUGxhdGZvcm0veDg2XzY0LzIwLjA4CgAAcw==",
-            "org.flatpak.commit-metadata.xa.ref": "cnVudGltZS9jb20udmFsdmVzb2Z0d2FyZS5TdGVhbS5Db21wYXRpYmlsaXR5VG9vbC5Qcm90b24tR0UveDg2XzY0L3N0YWJsZQAAcw==",
-            "org.flatpak.download-size": "383272006",
+            "org.flatpak.commit-metadata.xa.ref": "cnVudGltZS9jb20udmFsdmVzb2Z0d2FyZS5TdGVhbS5Db21wYXRpYmlsaXR5VG9vbC5Qcm90b24tR0UveDg2XzY0L3Rlc3QAAHM=",
+            "org.flatpak.download-size": "383274353",
             "org.flatpak.installed-size": "1138873856",
             "org.flatpak.metadata": "[Runtime]\nname=com.valvesoftware.Steam.CompatibilityTool.Proton-GE\nsdk=org.freedesktop.Sdk/x86_64/20.08\n\n[ExtensionOf]\nref=app/com.valvesoftware.Steam/x86_64/stable\nruntime=org.freedesktop.Platform/x86_64/20.08\n",
-            "org.flatpak.ref": "runtime/com.valvesoftware.Steam.CompatibilityTool.Proton-GE/x86_64/stable",
+            "org.flatpak.ref": "runtime/com.valvesoftware.Steam.CompatibilityTool.Proton-GE/x86_64/test",
             "org.flatpak.subject": "Export com.valvesoftware.Steam.CompatibilityTool.Proton-GE",
-            "org.flatpak.timestamp": "1606485960",
-            "org.freedesktop.appstream.appdata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<components version=\"0.8\" origin=\"flatpak\">\n  <component type=\"addon\">\n    <id>com.valvesoftware.Steam.CompatibilityTool.Proton-GE</id>\n    <name>Proton-GE</name>\n    <name xml:lang=\"es\">Proton (construcción comunitaria)</name>\n    <name xml:lang=\"pt_BR\">Proton (construção da comunidade)</name>\n    <summary>Latest Proton-GE version built on the Flatpak Freedesktop SDK</summary>\n    <summary xml:lang=\"de\">Die neueste Proton-Version basiert auf dem Flatpak Freedesktop SDK</summary>\n    <summary xml:lang=\"es\">Última versión de Proton construida en Flatpak Freedesktop SDK</summary>\n    <summary xml:lang=\"pt_BR\">A versão mais recente do Proton baseada no SDK do Flatpak Freedesktop</summary>\n    <project_license>BSD-3-Clause and LGPL-2.1 and zlib-acknowledgement and Zlib and OFL-1.1 and MIT and MPL-2.0 and LicenseRef-proprietary</project_license>\n    <url type=\"bugtracker\">https://github.com/flathub/com.valvesoftware.Steam.CompatibilityTool.Proton-GE/issues</url>\n    <url type=\"homepage\">https://github.com/GloriousEggroll/proton-ge-custom</url>\n    <extends>com.valvesoftware.Steam</extends>\n    <bundle type=\"flatpak\" sdk=\"org.freedesktop.Sdk/x86_64/20.08\">runtime/com.valvesoftware.Steam.CompatibilityTool.Proton-GE/x86_64/stable</bundle>\n  </component>\n</components>"
+            "org.flatpak.timestamp": "1606500996",
+            "org.freedesktop.appstream.appdata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<components version=\"0.8\" origin=\"flatpak\">\n  <component type=\"addon\">\n    <id>com.valvesoftware.Steam.CompatibilityTool.Proton-GE</id>\n    <name>Proton-GE</name>\n    <name xml:lang=\"es\">Proton (construcción comunitaria)</name>\n    <name xml:lang=\"pt_BR\">Proton (construção da comunidade)</name>\n    <summary>Latest Proton-GE version built on the Flatpak Freedesktop SDK</summary>\n    <summary xml:lang=\"de\">Die neueste Proton-Version basiert auf dem Flatpak Freedesktop SDK</summary>\n    <summary xml:lang=\"es\">Última versión de Proton construida en Flatpak Freedesktop SDK</summary>\n    <summary xml:lang=\"pt_BR\">A versão mais recente do Proton baseada no SDK do Flatpak Freedesktop</summary>\n    <project_license>BSD-3-Clause and LGPL-2.1 and zlib-acknowledgement and Zlib and OFL-1.1 and MIT and MPL-2.0 and LicenseRef-proprietary</project_license>\n    <url type=\"bugtracker\">https://github.com/flathub/com.valvesoftware.Steam.CompatibilityTool.Proton-GE/issues</url>\n    <url type=\"homepage\">https://github.com/GloriousEggroll/proton-ge-custom</url>\n    <extends>com.valvesoftware.Steam</extends>\n    <bundle type=\"flatpak\" sdk=\"org.freedesktop.Sdk/x86_64/20.08\">runtime/com.valvesoftware.Steam.CompatibilityTool.Proton-GE/x86_64/test</bundle>\n  </component>\n</components>"
           },
           "Architecture": "amd64",
           "Os": "linux",
           "Layers": [
-            "sha256:ce93f6f321fe0c0876a941fdce048094c1f50d0ee3a5b7907ae9243c377709ee"
+            "sha256:b08dc3735616cb1bd082c7e3cc8afbc7a42ff9ac7a37b9037ab7b8265df5ea6f"
           ],
           "Env": null
         }
